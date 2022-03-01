@@ -1,2 +1,3 @@
 title: homepage
-permalink: demo.markdown
+minima:
+  skin: dark
