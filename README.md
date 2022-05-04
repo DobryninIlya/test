@@ -1,2 +1,2 @@
 # test
-http://legalchik.ga/test/
+http://legalchik.ml/test/
