@@ -1,2 +1,2 @@
-print("1w456q1")
+print(0)
   
