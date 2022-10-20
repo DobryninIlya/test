@@ -1,2 +1,2 @@
-print("1w")
+print("1w1")
   
