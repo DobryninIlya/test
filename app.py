@@ -12,6 +12,11 @@ def index():
     return text_render("200")
 
 
+@app.route("/baby")
+def text(text):
+    return text_render("dilbarik")
+
+
 @app.route("/<text>")
 def text(text):
     return text_render(text)
