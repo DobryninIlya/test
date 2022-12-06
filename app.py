@@ -13,7 +13,7 @@ def index():
 
 
 @app.route("/baby")
-def text(text):
+def baby():
     return text_render("dilbarik")
 
 
