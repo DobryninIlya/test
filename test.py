@@ -10,6 +10,7 @@ try:
         return "hello world"
 
     if __name__ == "__main__":
-        app.run("0.0.0.0", debug=True)
+        port = int(os.environ.get("PORT", 5000))
+        app.run("0.0.0.0", port=port, debug=True)
 except Exception as e:
     print(e)
