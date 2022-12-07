@@ -7,6 +7,11 @@ import os
 app = Flask(__name__)
 
 
+@app.route("/ping"):
+def ping():
+    return "pong"
+
+
 @app.route("/")
 def index():
     return text_render("200")
