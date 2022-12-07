@@ -8,5 +8,9 @@ def main():
 
 
 while True:
-    main()
-    sleep(599)
+    try:
+        main()
+        sleep(599)
+    except Exception as e:
+        print(e)
+        sleep(500)
