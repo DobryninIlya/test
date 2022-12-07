@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 
-@app.route("/ping"):
+@app.route("/ping")
 def ping():
     return "pong"
 
