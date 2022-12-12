@@ -1,45 +1,30 @@
 from flask import Flask
-from art import text2art
-from time import sleep
-import os
+from aiogram import Bot, Dispatcher, executor, types
+from multiprocessing import Process
 
 
-app = Flask(__name__)
+app = Flask(import_name=__name__)
+
+bot = Bot(token="5787914744:AAGEMphfea_vetIz7EPe1RnKJaLOT0w3QwQ")
+dispatcher = Dispatcher(bot=bot)
 
 
-@app.route("/ping")
-def ping():
-    return "pong"
+def bot_start_polling():
+    executor.start_polling(dispatcher=dispatcher, skip_updates=True)
 
 
-@app.route("/")
-def index():
-    return text_render("200")
+@dispatcher.message_handler(commands=['start'])
+async def bot_handler_start(message: types.Message):
+    await message.reply('Foo')
 
 
-@app.route("/baby")
-def baby():
-    return text_render("dilbarik")
+@app.get(rule='/bot')
+def start_bot():
+    bot_process = Process(target=bot_start_polling)
+    bot_process.start()
+
+    return str(bot_process.pid)
 
 
-@app.route("/<text>")
-def text(text):
-    return text_render(text)
-
-
-def text_render(text: str):
-    yield "<pre>"
-    for el in text2art(text, font='block', chr_ignore=True).split("\n"):
-
-        for i in el:
-            yield i
-            sleep(0.005)
-        yield "<br>"
-
-    yield "</pre>"
-
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run("0.0.0.0", port=port, debug=True)
+if __name__ == '__main__':
+    app.run()
