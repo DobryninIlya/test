@@ -1,30 +1,47 @@
-from flask import Flask
-from aiogram import Bot, Dispatcher, executor, types
-from multiprocessing import Process
+import logging
+import os
+from aiogram import Bot
+from aiogram.dispatcher import Dispatcher
+from aiogram.utils.executor import start_webhook
+from aiogram import Bot, types
+
+TOKEN = "5787914744:AAGEMphfea_vetIz7EPe1RnKJaLOT0w3QwQ"
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
 
 
-app = Flask(import_name=__name__)
 
-bot = Bot(token="5787914744:AAGEMphfea_vetIz7EPe1RnKJaLOT0w3QwQ")
-dispatcher = Dispatcher(bot=bot)
+# webhook settings
+WEBHOOK_HOST = f'https://legalchik.onrender.com'
+WEBHOOK_PATH = f'/webhook/{TOKEN}'
+WEBHOOK_URL = f'{WEBHOOK_HOST}{WEBHOOK_PATH}'
 
-
-def bot_start_polling():
-    executor.start_polling(dispatcher=dispatcher, skip_updates=True)
-
-
-@dispatcher.message_handler(commands=['start'])
-async def bot_handler_start(message: types.Message):
-    await message.reply('Foo')
+# webserver settings
+WEBAPP_HOST = '0.0.0.0'
+WEBAPP_PORT = os.getenv('PORT', default=8000)
 
 
-@app.get(rule='/bot')
-def start_bot():
-    bot_process = Process(target=bot_start_polling)
-    bot_process.start()
+async def on_startup(dispatcher):
+    await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
 
-    return str(bot_process.pid)
+
+async def on_shutdown(dispatcher):
+    await bot.delete_webhook()
+
+
+@dp.message_handler()
+async def echo(message: types.Message):
+    await message.answer(message.text)
 
 
 if __name__ == '__main__':
-    app.run()
+    logging.basicConfig(level=logging.INFO)
+    start_webhook(
+        dispatcher=dp,
+        webhook_path=WEBHOOK_PATH,
+        skip_updates=True,
+        on_startup=on_startup,
+        on_shutdown=on_shutdown,
+        host=WEBAPP_HOST,
+        port=WEBAPP_PORT,
+    )
